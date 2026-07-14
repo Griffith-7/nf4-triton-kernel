@@ -39,12 +39,30 @@ Tested against `bitsandbytes` v0.49.2 on **RTX 3050 Laptop GPU** (PyTorch 2.13.0
 
 | Tensor Size | Triton Kernel | bitsandbytes C++ | Speedup |
 |-------------|---------------|-------------------|---------|
-| 4,096 | 0.070 ms | 0.089 ms | **1.27x** |
-| 16,384 | 0.067 ms | 0.088 ms | **1.32x** |
-| 65,536 | 0.070 ms | 0.091 ms | **1.31x** |
-| 262,144 | 0.066 ms | 0.093 ms | **1.41x** |
+| 4,096 | 0.021 ms | 0.030 ms | **1.43x** |
+| 16,384 | 0.018 ms | 0.030 ms | **1.68x** |
+| 65,536 | 0.017 ms | 0.029 ms | **1.72x** |
+| 262,144 | 0.025 ms | 0.035 ms | **1.39x** |
 
 All sizes pass the **>1.15x** threshold. On Tesla T4, the original author reported **2.09x**.
+
+### Speedup Comparison
+
+<p align="center">
+  <img src="assets/speedup_comparison.png" alt="Speedup Comparison" width="600">
+</p>
+
+### Latency Comparison
+
+<p align="center">
+  <img src="assets/latency_comparison.png" alt="Latency Comparison" width="600">
+</p>
+
+### Scaling Behavior
+
+<p align="center">
+  <img src="assets/scaling_curve.png" alt="Scaling Curve" width="600">
+</p>
 
 ## How It Works
 
@@ -77,7 +95,7 @@ uint8 packed bytes → bit unpack → NF4 table lookup (PTX ASM) → absmax scal
 | L2 Cache Eviction | Passed | +1 |
 | BF16/FP16 Output | Passed | +1 |
 | torch.compile Compatible | Passed (inductor) | +1 |
-| >1.15x Speedup vs BnB | Passed (1.27x – 1.41x) | +5 |
+| >1.15x Speedup vs BnB | Passed (1.39x – 1.72x) | +5 |
 | **Total** | | **14/14** |
 
 ## Installation
