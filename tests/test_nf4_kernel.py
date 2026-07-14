@@ -8,7 +8,6 @@ import torch
 import pytest
 
 from nf4_kernel import (
-    NF4_TABLE,
     dequant_nf4,
     quantize_nf4,
     quantize_nf4_reference,
@@ -156,15 +155,15 @@ class TestQuantizeUtilities:
 
 class TestInputValidation:
     def test_wrong_absmax_size_raises(self, device):
-        t = torch.randn(256, dtype=torch.bfloat16, device=device)
         packed = torch.zeros(128, dtype=torch.uint8, device=device)
         wrong_absmax = torch.zeros(1, dtype=torch.float32, device=device)
         with pytest.raises(ValueError, match="Expected absmax size"):
             dequant_nf4(packed, wrong_absmax)
 
     def test_unsupported_dtype_raises(self, device):
-        t = torch.randn(256, dtype=torch.bfloat16, device=device)
-        packed, absmax, _, _ = quantize_nf4(t)
+        packed, absmax, _, _ = quantize_nf4(
+            torch.randn(256, dtype=torch.bfloat16, device=device)
+        )
         with pytest.raises(ValueError, match="Unsupported output dtype"):
             dequant_nf4(packed, absmax, dtype=torch.float32)
 
